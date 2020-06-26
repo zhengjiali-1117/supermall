@@ -41,16 +41,21 @@
         swiperStyle:{}, // swiper样式
         currentIndex:1, // 当前的index
         scrolling:false, // 是否正在滚动
+        playTimer:null
       }
     },
     mounted: function () {
-      // 1.操作DOM, 在前后添加Slide
-      setTimeout(() => {
-        this.handleDom();
 
-        // 2.开启定时器
-        this.startTimer();
-      }, 100)
+
+      setTimeout(() => {
+        // 1.操作DOM, 在前后添加Slide
+          this.handleDom();
+
+          // 2.开启定时器
+          this.startTimer();
+        }, 2000)
+
+
     },
     methods: {
       /**
