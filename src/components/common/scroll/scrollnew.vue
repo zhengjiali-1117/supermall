@@ -31,19 +31,22 @@ export default {
         click: true,
         probeType: this.probeType,//监听滚动数据x，y
         pullUpLoad: this.pullUpLoad //下拉加载
-        }),
+        })
 
         //监听滚动时间
-        this.scroll.on('scroll',(position)=>{
-           this.$emit('scroll', position);
-        })
+        if( this.probeType === 2 || this.probeType === 3 ){
+          this.scroll.on('scroll',(position)=>{
+             this.$emit('scroll', position);
+          })
+        }
 
         //监听下拉加载事件
-        this.scroll.on("pullingUp",()=>{
-          console.log('下拉加载更多');
-          this.$emit('pullUpLoad');
-
-        })
+        if( this.pullUpLoad ){
+          this.scroll.on("pullingUp",()=>{
+            console.log('下拉加载更多');
+            this.$emit('pullUpLoad');
+          })
+        }
   },
   computed: {
     scrollY(){
@@ -52,10 +55,18 @@ export default {
   },
   methods: {
     scrollTo(x,y,time){
-      this.scroll.scrollTo(x,y,time);
+      this.scroll && this.scroll.scrollTo(x,y,time);
     },
     finishPullUp(){
       this.scroll.finishPullUp();
+    },
+    refresh() {
+      console.log('------');
+
+      this.scroll && this.scroll.refresh();
+    },
+    getScrollY() {
+      return this.scroll.y ? this.scroll.y : 0;
     }
   }
 }
