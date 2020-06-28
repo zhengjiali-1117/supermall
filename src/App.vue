@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <main-tabber>
-    </main-tabber>
-    <keep-alive>
+    <keep-alive exclude="shopdetail">
      <router-view></router-view>
     </keep-alive>
+    <main-tabber>
+    </main-tabber>
   </div>
 
 </template>

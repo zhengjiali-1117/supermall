@@ -1,26 +1,41 @@
 <template>
-  <detail-nav-bar/>
-  <!-- <detail-swiper>
+<div>
+  <detail-nav-bar></detail-nav-bar>
+  <deswiper :topImages= "topImages"></deswiper>
+  <ul>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+    <li>scadsfcsdvsdvd</li>
+  </ul>
+</div>
+  
 
-  </detail-swiper> -->
 </template>
 
 <script>
 import detailNavBar from './detailChild/detailNavBar'
-// import detailSwiper from './detailChild/detailSwiper'
+import deswiper from './detailChild/deswiper'
 
-import {getDetailDate} from 'network/detail'
+import {getDetailDate,GoodsInfo} from 'network/detail'
 
 export default {
-  name: 'shopDetail',
+  name: 'shopdetail',
   components:{
     detailNavBar,
-    // detailSwiper
+    deswiper
 
   },
   data() {
     return {
       iid : null,
+      goods:null,
       topImages: {
         type: Array,
         default() {
@@ -30,13 +45,17 @@ export default {
     }
   },
   created() {
-     getDetailDate( this.iid ).then( (res)=> {
-      //  this.topImages = res.result.itemInfo.topImages;
-      console.log(res);
-
-       console.log( this.topImages );
-
-    } )
+    this.iid = this.$route.params.iid;
+      getDetailDate( this.iid ).then( res => {
+        const result  = res.result;
+        const topImages = res.result.itemInfo.topImages;
+        this.topImages = topImages;
+        console.log( res );
+      //获取描述信息
+      this.goods = new GoodsInfo( result.itemInfo, result.columns, result.shopInfo.services );
+      console.log(this.goods);
+      
+    })
   }
 }
 </script>
