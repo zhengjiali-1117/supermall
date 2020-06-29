@@ -7,7 +7,7 @@
       <div class="item" slot="center" >
         <div class="item-text" v-for="(item,index) in title" :key="index"
                                @click="changeItem(index)">
-          <span :class="{color: currentIndex == index}">{{item}}</span>
+          <span :class="{color: currentIndex == index}" @click="paramPage(index)">{{item}}</span>
         </div>
       </div>
     </nav-bar>
@@ -38,6 +38,9 @@ export default {
     },
     btnBack() {
       this.$router.go(-1);
+    },
+    paramPage(index) {
+      this.$emit("paramPage",index)
     }
   }
 }

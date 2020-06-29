@@ -87,14 +87,17 @@ export default {
   },
   activated() {
     //离开页面后   在进入回到之前的位置
-    this.$refs.scroll.scrollTo( 0 , this.saveY ,0)
+    this.$refs.scroll.scrollTo( 0 , this.saveY ,0);
     this.$refs.scroll.refresh();
   },
   deactivated() {
     //记录离开页面时的位置
     this.saveY = this.$refs.scroll.getScrollY();
+
   },
   methods: {
+
+
     //导航吸顶效果
     imageFinishLoad() {
       this.taboffsetTop = this.$refs.tabControl2.$el.offsetTop;

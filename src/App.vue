@@ -2,7 +2,7 @@
   <div id="app">
     <main-tabber>
     </main-tabber>
-    <keep-alive>
+    <keep-alive exclude="shopdetail">
      <router-view></router-view>
     </keep-alive>
   </div>
