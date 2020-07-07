@@ -18,6 +18,11 @@ export default {
   },
   components: {
     goodsListItem,
+  },
+  data() {
+    return {
+      goodsItem: {}
+    }
   }
 }
 </script>

@@ -8,11 +8,13 @@ export function getDetailDate( iid ) {
     }
   })
 }
-<<<<<<< HEAD
+//详情页推荐数据
+export function getRecommends(){
+  return request({
+    url: '/recommend'
+  })
+}
 //详情页商品信息
-=======
-
->>>>>>> b8c4b7889a78743a0c4d7c91854c5307e3da8bdd
 export class GoodsInfo{
   constructor( itemInfo, columns, service ){
     this.title = itemInfo.title
@@ -25,9 +27,6 @@ export class GoodsInfo{
     this.realPrice = itemInfo.lowNowPrice
   }
 }
-<<<<<<< HEAD
-
-
 
 //详情页商家信息
 export class Shop {
@@ -50,5 +49,4 @@ export class GoodsParam {
 		this.sizes = rule.tables;
 	}
 }
-=======
->>>>>>> b8c4b7889a78743a0c4d7c91854c5307e3da8bdd
+

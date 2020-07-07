@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="" @load="imgLoad" @click="itemclick">
+    <img :src="showImage" alt="" @load="imgLoad" @click="itemclick">
     <div class="goods-text">
       <p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
@@ -18,6 +18,11 @@ export default {
       default() {
         return []
       }
+    }
+  },
+  computed: {
+    showImage() {
+      return this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {
