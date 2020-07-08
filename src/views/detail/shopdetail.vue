@@ -2,14 +2,17 @@
   <div>
     <div id="detail">
       <detail-nav-bar class="detail-nav"></detail-nav-bar>
-      <deswiper :topImages= "topImages"></deswiper>
-      <detail-desc :goods = "goods"></detail-desc>
-      <detail-shop-info :shop="shop"></detail-shop-info>
-      <detail-goods-info :detail-info = 'detailImages'></detail-goods-info>
-      <detail-param-info ref="params" :param-info = "paramInfo"></detail-param-info>
-      <detail-comment-info ref="comment" :comment-info = "commentInfo"></detail-comment-info>
+      <scroll class="scrollcontent" ref="scroll"  :probe-type="3" :pull-up-load="true">
+        <deswiper :topImages= "topImages"></deswiper>
+        <detail-desc :goods = "goods"></detail-desc>
+        <detail-shop-info :shop="shop"></detail-shop-info>
+        <detail-goods-info :detail-info = 'detailImages'></detail-goods-info>
+        <detail-param-info ref="params" :param-info = "paramInfo"></detail-param-info>
+        <detail-comment-info ref="comment" :comment-info = "commentInfo"></detail-comment-info>
+        <goods-list :goods = "recommends"></goods-list>
+      </scroll>
       <detail-bottom-bar :comment-info = "commentInfo"></detail-bottom-bar>
-      <goods-list :goods = "recommends"></goods-list>
+
     </div>
 
   </div>
@@ -26,7 +29,10 @@ import DetailParamInfo from './detailChild/DetailParamInfo'
 import DetailCommentInfo from './detailChild/DetailCommentInfo'
 import DetailBottomBar from './detailChild/DetailBottomBar'
 import goodsList from 'components/content/goods/goodsList'
+import Scroll from 'components/common/scroll/scrollnew'
 
+
+import { debounce } from 'common/utils'
 import { getDetailDate,GoodsInfo,Shop,GoodsParam,getRecommends } from 'network/detail'
 
 
@@ -41,7 +47,8 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     DetailBottomBar,
-    goodsList
+    goodsList,
+    Scroll
 
   },
   data() {
@@ -54,6 +61,7 @@ export default {
       paramInfo:{},
       commentInfo:Array,
       recommends: Array,
+      itemImgListener: null,
       topImages: {
         type: Array,
         default() {
@@ -91,6 +99,18 @@ export default {
     this.recommends = res.data.list;
     console.log(this.recommends);
    })
+  },
+  mounted() {
+    const refresh = debounce( this.$refs.scroll.refresh,200);
+    console.log(this.$refs.scroll.refresh );
+
+    this.itemImgListener = () => {
+      refresh();
+    }
+    this.$bus.$on('imageLoad', this.itemImgListener);
+  },
+  deactivated() {
+    this.$bus.$off('imageLoad', this.itemImgListener);
   }
 }
 </script>
@@ -100,6 +120,16 @@ export default {
     position: relative;
     z-index: 10;
     background: #fff;
+    height: 100vh;
+  }
+  .scrollcontent{
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right:0;
+    margin-bottom: 10px;
   }
   .detail-nav{
     position: fixed;

@@ -48,6 +48,7 @@ export default {
       currentTab:'pop',
       taboffsetTop: 0,
       saveY: 0,
+      itemImgListener: null,
       goods: {
         'pop': { page: 0 , list : [] },
         'new':{ page: 0 , list : [] },
@@ -80,9 +81,10 @@ export default {
     //非父子组件之间的通信 可以用事件总线$bus  要现在mainjs中把$bus设置成vue原型属性
     //监听image图片加载  事件总线   要现在mainjs中把$bus设置成vue原型属性
     const refresh = debounce( this.$refs.scroll.refresh,200);
-    this.$bus.$on('imageLoad',() => {
+    this.itemImgListener = () => {
       refresh();
-    })
+    }
+    this.$bus.$on('imageLoad',this.itemImgListener)
 
   },
   activated() {
@@ -91,6 +93,8 @@ export default {
     this.$refs.scroll.refresh();
   },
   deactivated() {
+    //离开当前路由时 清除所有监听事件
+    this.$bus.$off('imageLoad',  this.itemImgListener);
     //记录离开页面时的位置
     this.saveY = this.$refs.scroll.getScrollY();
 
