@@ -1,15 +1,18 @@
 <template>
   <div>
     <div id="detail">
-      <detail-nav-bar class="detail-nav"></detail-nav-bar>
-      <scroll class="scrollcontent" ref="scroll"  :probe-type="3" :pull-up-load="true">
+      <detail-nav-bar class="detail-nav" ref="detailNavBar" @changeItem = "changeItem"></detail-nav-bar>
+      <scroll class="scrollcontent" ref="scroll"
+                                    @scroll = "scroll"
+                                    :probe-type="3"
+                                    :pull-up-load="true">
         <deswiper :topImages= "topImages"></deswiper>
         <detail-desc :goods = "goods"></detail-desc>
         <detail-shop-info :shop="shop"></detail-shop-info>
-        <detail-goods-info :detail-info = 'detailImages'></detail-goods-info>
+        <detail-goods-info :detail-info = 'detailImages' @imageLoad = "imageLoad"></detail-goods-info>
         <detail-param-info ref="params" :param-info = "paramInfo"></detail-param-info>
         <detail-comment-info ref="comment" :comment-info = "commentInfo"></detail-comment-info>
-        <goods-list :goods = "recommends"></goods-list>
+        <goods-list ref="recommend" :goods = "recommends"></goods-list>
       </scroll>
       <detail-bottom-bar :comment-info = "commentInfo"></detail-bottom-bar>
 
@@ -62,6 +65,9 @@ export default {
       commentInfo:Array,
       recommends: Array,
       itemImgListener: null,
+      themeTopY: [], //记录导航标题的top值
+      getThemeTopY:null,
+      currentIndex:0,//记录当前的导航标题的下标
       topImages: {
         type: Array,
         default() {
@@ -78,21 +84,38 @@ export default {
       this.topImages = res.result.itemInfo.topImages;
       const topImages = res.result.itemInfo.topImages;
       this.topImages = topImages;
-      console.log( res );
-
-    //获取描述信息
-    this.goods = new GoodsInfo( result.itemInfo, result.columns, result.shopInfo.services );
-    console.log(this.goods);
-
-    this.shop = new Shop(result.shopInfo);
-
-    this.detailImages = result.detailInfo;
-    //获取详情页参数
-    this.paramInfo = new GoodsParam(result.itemParams.info, result.itemParams.rule);
-    //获取评论
-     if (result.rate.list) {
-       this.commentInfo = result.rate.list[0];
+      //获取描述信息
+      this.goods = new GoodsInfo( result.itemInfo, result.columns, result.shopInfo.services );
+      console.log(this.goods);
+      this.shop = new Shop(result.shopInfo);
+      this.detailImages = result.detailInfo;
+      //获取详情页参数
+      this.paramInfo = new GoodsParam(result.itemParams.info, result.itemParams.rule);
+      //获取评论
+       if (result.rate.list) {
+        this.commentInfo = result.rate.list[0];
       }
+      // //等前面的内容渲染完成后 执行 保证this.$refs.params.$el.offsetTop有值
+      // 值不对   原因：图片没有加载完成
+      // this.$nextTick(()=>{
+        // this.themeTopY = [];
+        // //获取导航标题的offsetTop值
+        // this.themeTopY.push(0);
+        // this.themeTopY.push(this.$refs.params.$el.offsetTop);
+        // this.themeTopY.push(this.$refs.comment.$el.offsetTop);
+        // this.themeTopY.push(this.$refs.recommend.$el.offsetTop);
+        // console.log(this.themeTopY);
+      // })
+      //防抖
+      this.getThemeTopY = debounce(()=>{
+        this.themeTopY = [];
+        //获取导航标题的offsetTop值
+        this.themeTopY.push(0);
+        this.themeTopY.push(this.$refs.params.$el.offsetTop);
+        this.themeTopY.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopY.push(this.$refs.recommend.$el.offsetTop);
+        console.log(this.themeTopY);
+      },100)
     }),
     //获取推荐数据
     getRecommends().then((res) => {
@@ -102,19 +125,40 @@ export default {
   },
   mounted() {
     const refresh = debounce( this.$refs.scroll.refresh,200);
-    console.log(this.$refs.scroll.refresh );
-
     this.itemImgListener = () => {
       refresh();
     }
     this.$bus.$on('imageLoad', this.itemImgListener);
   },
-  deactivated() {
+  destroyed() {
     this.$bus.$off('imageLoad', this.itemImgListener);
+  },
+  methods: {
+    //导航切换
+    changeItem( index ){
+      console.log(index);
+      this.$refs.scroll.scrollTo(0,-this.themeTopY[index] ,200);
+    },
+    //图片加载
+    imageLoad(){
+      this.$refs.scroll.refresh();
+      this.getThemeTopY();
+    },
+    scroll(position){
+      let length = this.themeTopY.length;
+      // let positionY = -position.y;
+      console.log(position.y);
+      for(let i = 0 ; i < this.themeTopY.length; i ++){
+        if( this.currentIndex !== i  && (( i < length-1 && -position.y >= this.themeTopY[i] && -position.y < this.themeTopY[i+1] )
+        || ( i === length-1 && -position.y >= this.themeTopY[i]))){
+          this.currentIndex = i;
+          this.$refs.detailNavBar.currentIndex = this.currentIndex;
+        }
+      }
+    },
   }
 }
 </script>
-
 <style scoped>
   #detail{
     position: relative;

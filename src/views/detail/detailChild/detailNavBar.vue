@@ -35,6 +35,7 @@ export default {
   methods: {
     changeItem(index) {
       this.currentIndex = index;
+      this.$emit("changeItem",index);
     },
     btnBack() {
       this.$router.go(-1);
