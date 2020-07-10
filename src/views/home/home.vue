@@ -34,14 +34,14 @@ import goodsList from 'components/content/goods/goodsList'
 import {getHomeData,getHomeGoods} from 'network/home'
 
 import Scroll from 'components/common/scroll/scrollnew'
-import backTop from 'components/content/backTop/backTop'
 import { debounce } from 'common/utils'
+import { backTopMixin } from 'common/mixin'
 
 export default {
   name:'home',
   data(){
     return {
-      isChange: true,
+      // isChange: true,
       isTabChange: false,
       banners : [],
       recommends: [],
@@ -56,15 +56,16 @@ export default {
       }
     }
   },
+  mixins: [backTopMixin],
   components: {
     navBar,
     homeSwiper,
     recommendView,
     featureView,
     goodsList,
-    backTop,
+    // backTop,
     TabControl,
-    Scroll,
+    Scroll
   },
   created(){
     //路由被创建之后立刻发送请求获取数据
@@ -89,14 +90,17 @@ export default {
   },
   activated() {
     //离开页面后   在进入回到之前的位置
-    this.$refs.scroll.scrollTo( 0 , this.saveY ,0);
+    this.$refs.scroll.scrollTo( 0 , this.saveY ,100);
+    console.log( this.saveY)
+
     this.$refs.scroll.refresh();
   },
   deactivated() {
-    //离开当前路由时 清除所有监听事件
-    this.$bus.$off('imageLoad',  this.itemImgListener);
     //记录离开页面时的位置
     this.saveY = this.$refs.scroll.getScrollY();
+    console.log( this.saveY)
+    //离开当前路由时 清除所有监听事件
+    this.$bus.$off('imageLoad',  this.itemImgListener);
 
   },
   methods: {
@@ -144,10 +148,10 @@ export default {
 
     },
 
-    // 回到顶部
-    backTop() {
-      this.$refs.scroll.scrollTo(0,0,500);
-    },
+    // // 回到顶部
+    // backTop() {
+    //   this.$refs.scroll.scrollTo(0,0,500);
+    // },
 
     // 回到顶部 监测滚动高度
     scroll(position){

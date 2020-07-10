@@ -14,7 +14,9 @@
         <detail-comment-info ref="comment" :comment-info = "commentInfo"></detail-comment-info>
         <goods-list ref="recommend" :goods = "recommends"></goods-list>
       </scroll>
-      <detail-bottom-bar :comment-info = "commentInfo"></detail-bottom-bar>
+      <detail-bottom-bar  @addToCart = "addToCart"></detail-bottom-bar>
+      <back-top  @click.native = "backTop" :class = "{active:isChange}"></back-top>
+
 
     </div>
 
@@ -36,6 +38,7 @@ import Scroll from 'components/common/scroll/scrollnew'
 
 
 import { debounce } from 'common/utils'
+import { backTopMixin } from 'common/mixin'
 import { getDetailDate,GoodsInfo,Shop,GoodsParam,getRecommends } from 'network/detail'
 
 
@@ -54,6 +57,7 @@ export default {
     Scroll
 
   },
+  mixins: [backTopMixin],
   data() {
     return {
 
@@ -62,8 +66,8 @@ export default {
       shop: {},
       detailImages: {},
       paramInfo:{},
-      commentInfo:Array,
-      recommends: Array,
+      commentInfo:{},
+      recommends: {},
       itemImgListener: null,
       themeTopY: [], //记录导航标题的top值
       getThemeTopY:null,
@@ -155,7 +159,24 @@ export default {
           this.$refs.detailNavBar.currentIndex = this.currentIndex;
         }
       }
+       //回到顶部
+      if(position.y > -1000){
+        this.isChange = true;
+      }else if(position.y < -1000){
+        this.isChange = false;
+      }
     },
+    addToCart() {
+      //获取购物车所要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.idd = this.idd;
+      product.LowPrice = this.goods.realPrice;
+      product.desc = this.goods.desc;
+      //将商品信息添加到购物车  通过store添加数据要通过mutations
+      this.$store.commit('addCart',product);
+    }
   }
 }
 </script>
@@ -173,7 +194,6 @@ export default {
     bottom: 49px;
     left: 0;
     right:0;
-    margin-bottom: 10px;
   }
   .detail-nav{
     position: fixed;
@@ -183,5 +203,8 @@ export default {
     z-index:9;
     background: #fff;
 
+  }
+  .active{
+    display: none;
   }
 </style>
