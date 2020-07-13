@@ -32,7 +32,6 @@
     },
     methods: {
       addToCart() {
-// this.$refs.ball.run(event.target)
         this.$emit('addToCart')
       }
     }

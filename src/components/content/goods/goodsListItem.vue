@@ -32,8 +32,6 @@ export default {
     },
     itemclick() {
       this.$router.push("/shopdetail/" + this.goodsItem.iid);
-      console.log(this.goodsItem.iid);
-
     }
   }
 }

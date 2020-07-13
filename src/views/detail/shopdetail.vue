@@ -60,7 +60,6 @@ export default {
   mixins: [backTopMixin],
   data() {
     return {
-
       iid: null,
       goods: {},
       shop: {},
@@ -82,6 +81,8 @@ export default {
   },
   created() {
     this.iid = this.$route.params.iid;
+    console.log(this.iid);
+
     //获取详情页数据
     getDetailDate( this.iid ).then( res => {
       const result  = res.result;
@@ -171,11 +172,14 @@ export default {
       const product = {};
       product.image = this.topImages[0];
       product.title = this.goods.title;
-      product.idd = this.idd;
+      product.iid = this.iid;
       product.LowPrice = this.goods.realPrice;
       product.desc = this.goods.desc;
       //将商品信息添加到购物车  通过store添加数据要通过mutations
-      this.$store.commit('addCart',product);
+      // this.$store.commit('addCart',product);
+      //将商品信息添加到购物车  通过store添加数据要通过actions
+      // console.log('通过store添加数据要通过actions');
+      this.$store.dispatch('addCart',product);
     }
   }
 }
