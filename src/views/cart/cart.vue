@@ -1,6 +1,6 @@
 <template>
   <div class="cart">
-    <!-- //导航 -->
+    <!-- //导航头 -->
     <nav-bar class="nav-bar">
       <div slot="center">购物车({{length}})</div>
     </nav-bar>
@@ -9,7 +9,7 @@
       <cart-list>
       </cart-list>
     </scroll>
-
+    <cart-btn></cart-btn>
   </div>
 </template>
 
@@ -17,7 +17,7 @@
   import navBar from 'components/common/navbar/navBar'
   import CartList from './childCart/CartList'
   import Scroll from 'components/common/scroll/scrollnew'
-
+  import CartBtn from './childCart/CartBtn'
   import {mapGetters} from 'vuex'
   export default {
     name:'cart',
@@ -25,6 +25,7 @@
       navBar,
       CartList,
       Scroll,
+      CartBtn
     },
     computed: {
       //将getters里的方法转成计算属性
@@ -45,7 +46,7 @@
     color: #fff;
   }
   .scrollcontent{
-    height: calc( 100% - 44px - 49px);
+    height: calc( 100% - 44px - 49px - 40px);
     overflow: hidden;
   }
 </style>
