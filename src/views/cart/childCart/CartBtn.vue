@@ -8,7 +8,7 @@
       <span>合计:￥</span>
       <span>{{ totalPrice }}</span>
     </div>
-    <div class="calcuted">
+    <div class="calcuted" @click = "calBtn">
       <span>去计算({{length}})</span>
     </div>
   </div>
@@ -48,6 +48,11 @@ import checkButton from 'components/content/checkButton/checkButton'
           for( let i = 0 ; i < this.$store.state.cartList.length ; i ++){
             this.$store.state.cartList[i].checked = true;
           }
+        }
+      },
+      calBtn() {
+        if(!this.checkedAll){
+          this.$toast.showToast("去首页逛逛吧",1500);
         }
       }
     }

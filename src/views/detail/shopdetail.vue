@@ -179,7 +179,10 @@ export default {
       // this.$store.commit('addCart',product);
       //将商品信息添加到购物车  通过store添加数据要通过actions
       // console.log('通过store添加数据要通过actions');
-      this.$store.dispatch('addCart',product);
+      this.$store.dispatch('addCart',product).then(res=>{
+        console.log(res);
+        this.$toast.showToast(res,2000);
+      });
     }
   }
 }
