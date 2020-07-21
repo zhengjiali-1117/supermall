@@ -89,8 +89,11 @@ import checkButton from 'components/content/checkButton/checkButton'
     margin-left: 30px;
   }
   .calcuted{
+    position: absolute;
+    right: 0;
+    bottom: 0px;
     background-color: red;
-    margin-left: 74px;
+    /* margin-left: 74px; */
     width: 100px;
     height: 40px;
     line-height:  40px;

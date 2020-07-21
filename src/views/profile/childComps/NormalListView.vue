@@ -2,7 +2,7 @@
   <div class="normal-list">
     <div v-for="(item, index) in listData" :key="index" class="item">
         <span class="icon">
-          <img :src="iconURL(item)" alt="">
+          <img :src='"~assets/img/profile/" + item.icon' alt="">
         </span>
       <div class="info">{{item.info}}</div>
     </div>
@@ -20,11 +20,11 @@
         }
       }
     },
-    methods: {
-			iconURL(item) {
-				return require('assets/img/profile/' + item.icon)
-      }
-    }
+    // methods: {
+		// 	iconURL(item) {
+		// 		return require('assets/img/profile/' + item.icon)
+    //   }
+    // }
 	}
 </script>
 
