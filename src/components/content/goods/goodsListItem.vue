@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     showImage() {
-      return this.goodsItem.image || this.goodsItem.show.img
+      return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {
@@ -40,6 +40,7 @@ export default {
 <style>
   .goods-item{
     width: 48%;
+
   }
   .goods-item img{
     width: 100%;
